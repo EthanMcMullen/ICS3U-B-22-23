@@ -10,7 +10,7 @@ public class Blackjack {
 
     static Scanner in = new Scanner(System.in);
     static final int MIN_BET = 5;
-    static final int STARTING_WALLET = 500;
+    static int startingWallet = 500;
     private static final int WIN = 1;
     private static final int LOST = -1;
     private static final int TIE = 0;
@@ -24,41 +24,132 @@ public class Blackjack {
     private static final String QUEEN = "Q";
     private static final String JACK = "J";
     private static final String ACE = "A";
+    private static final int BLACK_JACK = 21;
 
     public static void main(String[] args) {
-        int wallet = STARTING_WALLET;
+
+
+        int wallet = startingWallet;
         boolean stillPlaying = true;
         
         while(stillPlaying) {
+            System.out.println("Grandparents Life Savings: " + wallet);
             int bet = getBet(wallet);
-            String playerHand = getCard() + " " + getCard();
+            String playerHand = "2S" + " " + "2C";
             String dealerHand = getCard();
 
-            displayHand(playerHand, false, "Player: ");
-            displayHand(dealerHand, true, "Dealer: ");
+            
+            displayHand(dealerHand, true, "Cameron Hand: ");
 
+            // return who won
             int result = playHand(playerHand, dealerHand);
 
-            if (result == WIN)
+            if (result == WIN) {
                 wallet += bet;
-            else if (result == LOST)
+                System.out.println("You beat cameron! now time to stop gambling, the first step is understanding you have a problem");
+            } else if (result == LOST) {
                 wallet -= bet;
-
-            if (wallet < MIN_BET) {
+                System.out.println("You lost, the dealer beat you, and now you have to tell marco that you \"lost\" his rent payment for the month (he wont be happy)");
+            } else {
+                System.out.println("You have tied, cameron lets out a big sigh as the entire game was for nothing");
+            } if (wallet < MIN_BET) {
                 stillPlaying = false;
-                System.out.println("You do not have enough $$ yo play again");
+                System.out.println("You do not have enough $$ to play again, do you see what you did. you gambled your grandparents life savings away. and now your entire family hates you, what a shame.");
             } else
                 stillPlaying = playAgain();
         }
     }
 
     private static boolean playAgain() {
-        return false;
+        while (true) {
+            System.out.println("Cameron Gestures you to Play Again as he wants your money([Y]es/[N]o");
+            String result = in.nextLine().toLowerCase();
+
+            if (result.equals("y") || result.equals("yes"))
+                return true;
+            else if (result.equals("n") || result.equals("no"))
+                return false;
+        }
     }
 
     // return WIN if player wins LOST if play lost and TIE if player tie
     private static int playHand(String playerHand, String dealerHand) {
-        return 0;
+        playerHand = playerTurn(playerHand);
+        dealerHand = dealerTurn(dealerHand); 
+
+        int playerScore = getCardsValue(playerHand);
+        int dealerScore = getCardsValue(dealerHand);
+
+        if((playerScore <= BLACK_JACK) && ((playerScore > dealerScore) || (playerScore <= BLACK_JACK))) {
+            return WIN;
+        } else if ((playerScore > BLACK_JACK) || dealerScore > playerScore) {
+            return LOST;
+        } else 
+            return TIE;
+    }
+
+    private static int getCardsValue(String cards) {
+        int numAces = 0;
+
+        int scoreBeforeAces = 0;
+        for (int i = 0; i < cards.length(); i++) {
+            String s = cards.substring(i, i+1);
+            if("JQK1".indexOf(s) >= 0) {
+                scoreBeforeAces += 10;
+            } else if ("23456789".indexOf(s) >= 0) {
+                scoreBeforeAces += Integer.parseInt(s);
+            } else if ("A".equals(s)) {
+                numAces++;
+            }
+        }
+
+        if (numAces > 0 && (scoreBeforeAces + 11 + numAces - 1) <= BLACK_JACK) {
+            scoreBeforeAces += (11 + numAces - 1);
+        } else 
+            scoreBeforeAces += numAces;
+
+        return scoreBeforeAces;
+
+    }
+
+    
+
+    private static String dealerTurn(String dealerHand) {
+        dealerHand += " " + getCard();
+        displayHand(dealerHand, false, "Cameron's hand: ");
+        while(getCardsValue(dealerHand) < 17) {
+            dealerHand += " " + getCard();
+            displayHand(dealerHand, false, "Cameron's hand: ");
+        }
+        return dealerHand;
+    }
+
+    private static String playerTurn(String playerHand) {
+        displayHand(playerHand, false, "Player Hand:");
+
+        while(true){
+            if (takeCard()) {
+                playerHand += " " + getCard();
+                displayHand(playerHand, false, "Player Hand:");
+                if(getCardsValue(playerHand)>BLACK_JACK)
+                    return playerHand;
+            } else 
+                return playerHand;
+        }
+    }
+
+    private static boolean takeCard() {
+        while(true){
+            System.out.println("Hit (risky omg) [1] or Stand (safe ahh) [2]: ");
+            String result = in.nextLine().toLowerCase();
+
+            if (result.equals("1"))
+                return true;
+            else if (result.equals("2"))
+                return false;
+            else 
+                System.out.println("Invalid Imput bozo | Hit [1] or Stand [2]: ");
+        }
     }
 
     private static void displayHand(String cards, boolean isHidden, String label) {
@@ -106,19 +197,19 @@ public class Blackjack {
     private static int getBet(int maxBet) {
         boolean validBet = false;
         int bet = 0;
-        System.out.print("Please enter bet (MIN: $" + MIN_BET + "): ");
+        System.out.print("Please enter bet, Cameron wants at least " + MIN_BET + " bucks, or else it aint worth it: ");
         while(!validBet) {
             try {
             bet = Integer.parseInt(in.nextLine());
-
+            
             if (bet > maxBet) 
-                System.out.print("Invalid Bet | Please enter an Integer less than " + maxBet + ": ");
+                System.out.print("As you reach into your Grandparents Savings you realize that you just betting more then you have, you let out an awkward chuckle as Cameron tells you to change your bet: ");
             else if (bet < MIN_BET) 
-                System.out.print("Invalid Bet | Please enter an Integer greater than " + MIN_BET + ": ");
+                System.out.print("Cameron slowly wispers into your ear, That ain't enough idiot: ");
             else
                 validBet = true;
             } catch(NumberFormatException ex) {
-                System.out.print("Invalid Bet | Please enter an INTEGER (Number) and not a STRING: ");
+                System.out.print("Cameron says that you cant bet $" + bet + ". man its a shame you didnt pass grade 1");
             }
         }
 

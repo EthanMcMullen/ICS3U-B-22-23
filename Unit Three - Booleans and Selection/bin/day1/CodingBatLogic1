@@ -1,0 +1,43 @@
+package day1;
+
+public class CodingBatLogic1 {
+    public boolean love6(int a, int b) {
+        if (a == 6 || b == 6){
+          return true;
+        }
+        else if (a + b == 6) {
+          return true;
+        }
+        else if (Math.abs(a - b) == 6){
+          return true;
+        }
+          
+        return false;
+      }
+
+      public boolean cigarParty(int cigars, boolean isWeekend) {
+        if(cigars >= 40 && cigars <= 60) {
+          return true;
+        } else if(isWeekend == true && cigars >= 40){
+          return true;
+        } else
+        return false;
+      }      
+
+
+      public int caughtSpeeding(int speed, boolean isBirthday) {
+        int birthdayDiscount = 0;
+        if (isBirthday) {
+          birthdayDiscount = 5;
+        }
+          if (speed - birthdayDiscount <= 60) {
+            return 0;
+          } else if (speed - birthdayDiscount >= 61 && speed - birthdayDiscount <= 80) {
+            return 1;
+          } else if (speed - birthdayDiscount >= 81) {
+            return 2;
+          } else
+          return = 0;
+        }
+        
+}

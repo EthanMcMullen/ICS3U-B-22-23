@@ -35,7 +35,7 @@ public class Blackjack {
         while(stillPlaying) {
             System.out.println("Grandparents Life Savings: " + wallet);
             int bet = getBet(wallet);
-            String playerHand = "2S" + " " + "2C";
+            String playerHand = getCard() + " " + getCard();
             String dealerHand = getCard();
 
             

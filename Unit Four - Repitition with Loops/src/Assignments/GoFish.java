@@ -2,8 +2,6 @@ package Assignments;
 
 import java.util.Scanner;
 
-import javax.naming.spi.DirStateFactory.Result;
-import javax.swing.event.AncestorEvent;
 
 public class GoFish {
 
@@ -20,6 +18,7 @@ public class GoFish {
     private static final String ACE = "A";
     private static final int NUM_SUITS = 4;
     private static final String ACCEPTABLE_CARDS = "2345678910jqka";
+    private static final String ACCEPTABLE_CARDS_NO_10 = "23456789jqka";
     
     public static void main(String[] args) {
         int playerScore = 0;
@@ -30,9 +29,14 @@ public class GoFish {
         String cpuHand1 = addOrStartCards(NUM_STARTING_CARDS);
         String cpuHand2 = addOrStartCards(NUM_STARTING_CARDS);
         String cpuHand3 = addOrStartCards(NUM_STARTING_CARDS);
+        
 
         System.out.println("\n\n\nAll hands X means Faced Down \n_______________________________________________________________\n");
         printAllCards(playerHand, cpuHand1, cpuHand2, cpuHand3);
+        String playerDupes = checkHand(playerHand);
+        String cpu1Dupes = checkHand(cpuHand1);
+        String cpu2Dupes = checkHand(cpuHand2);
+        String cpu3Dupes = checkHand(cpuHand3);
 
         // For player turn 
 
@@ -60,23 +64,47 @@ public class GoFish {
         System.out.println(playerHand);
     }
 
+    
+
+    private static String checkHand(String hand) {
+        String k = "";
+        int numHas = 0;
+        String ans = "";
+        for (int j = 0; j < ACCEPTABLE_CARDS_NO_10.length(); j++) {
+            numHas = 0;
+            k = ACCEPTABLE_CARDS_NO_10.substring(j, j+1);
+            for (int i = 0; i < hand.length()-1; i++) {
+                    if (hand.substring(i, i+1).equals(k)) {
+                        numHas++;
+                        
+                }
+            }
+            if (numHas >= 2) {
+                ans += k + " ";
+            }
+        }
+        return ans;
+    }
+
+
+
     private static String changeStolenHands(String resultCard, String playerHand, String whoStolen, String cpuHand1, String cpuHand2, String cpuHand3, boolean isPlayer) {
         if (isPlayer) {
-            return goFishCheckVictem(playerHand, resultCard, whoStolen);
+            return goFishCheckVictim(playerHand, resultCard, whoStolen);
         } else {
             if (whoStolen.equals("cpu1")) {
-                return goFishCheckVictem(cpuHand1, resultCard, whoStolen);
+                return goFishCheckVictim(cpuHand1, resultCard, whoStolen);
             } else if (whoStolen.equals("cpu2")) {
-                return goFishCheckVictem(cpuHand2, resultCard, whoStolen);
+                return goFishCheckVictim(cpuHand2, resultCard, whoStolen);
             } else {
-                return goFishCheckVictem(cpuHand3, resultCard, whoStolen);
+                return goFishCheckVictim(cpuHand3, resultCard, whoStolen);
             }
         }
             
     }
 
 
-    private static String goFishCheckVictem(String hand, String resultCard, String whoStolen) {
+    private static String goFishCheckVictim(String hand, String resultCard, String whoStolen) {
         String ans = hand;
         while(true){
             if(ans.indexOf(resultCard) >= 0) {
@@ -89,6 +117,24 @@ public class GoFish {
                 return ans;
             }
         }
+    }
+
+    private static String checkGoFishThief(String hand, String resultCard, String name) {
+        String ans = "";
+        int numHas = 0;
+        for (int i = 0; i < hand.length()-1; i++) {
+            if (hand.substring(i, i+1).equals(resultCard)) {
+                ans += hand.substring(i,i+3);
+                numHas++;
+            } else if (hand.substring(i, i+2).equals(resultCard)) {
+                ans += hand.substring(i, i+4);
+                numHas++;
+            }
+        }
+        if (numHas > 0) {
+        System.out.println("Congratulations! , " + name + " has " + numHas + " " + resultCard + "(s) in their deck! ");
+        }
+        return ans;
     }
 
     private static String playerTurn(String playerHand) { //Begins the player's turn, it returns the card the player chooses if it is acceptable and in their hand
@@ -131,35 +177,19 @@ public class GoFish {
     private static String stealHands(String resultCard, String playerHand, String whoStolen, String cpuHand1, String cpuHand2, String cpuHand3, boolean isPlayer) {
         if (isPlayer) {
             if (whoStolen.equals("cpu1")) {
-                return checkGoFishTheif(cpuHand1, resultCard, whoStolen);
+                return checkGoFishThief(cpuHand1, resultCard, whoStolen);
             } else if (whoStolen.equals("cpu2")) {
-                return checkGoFishTheif(cpuHand2, resultCard, whoStolen);
+                return checkGoFishThief(cpuHand2, resultCard, whoStolen);
             } else { //equals cpu3
-                return checkGoFishTheif(cpuHand3, resultCard, whoStolen);
+                return checkGoFishThief(cpuHand3, resultCard, whoStolen);
             }
         } else {
-            return checkGoFishTheif(playerHand, resultCard, whoStolen);
+            return checkGoFishThief(playerHand, resultCard, whoStolen);
         }   
     }
 
     
-    private static String checkGoFishTheif(String hand, String resultCard, String name) {
-        String ans = "";
-        int numHas = 0;
-        for (int i = 0; i < hand.length()-1; i++) {
-            if (hand.substring(i, i+1).equals(resultCard)) {
-                ans += hand.substring(i,i+3);
-                numHas++;
-            } else if (hand.substring(i, i+2).equals(resultCard)) {
-                ans += hand.substring(i, i+4);
-                numHas++;
-            }
-        }
-        if (numHas > 0) {
-        System.out.println("Congratulations! , " + name + " has " + numHas + " " + resultCard + "(s) in their deck! ");
-        }
-        return ans;
-    }
+    
     
 
     private static void printAllCards(String playerHand, String cpuHand1, String cpuHand2, String cpuHand3) {
@@ -234,3 +264,4 @@ public class GoFish {
             return DIAMONDS;
     }
 }
+

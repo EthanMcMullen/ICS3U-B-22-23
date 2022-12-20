@@ -178,7 +178,7 @@ public class GoFish {
     
     }
 
-    private static String cpuHandPrint(String cpuHand) { // To show XX instead of Card Names for CPUs (also to bypass for 10s)
+    private static String cpuHandPrint(String cpuHand) { // To show XX instead of Card Names for CPUs / also to bypass for 10s
         int spacecount = 0;
         for (int i = 0; i < cpuHand.length(); i++) {
             if (cpuHand.substring(i, i+1).equals(" ")) {

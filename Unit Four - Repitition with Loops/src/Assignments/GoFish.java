@@ -102,7 +102,7 @@ public class GoFish {
             return hand;
         }
     }
-// FIX TEN
+// FIX TENN i think i fixed it anyway but who cares
 
     private static String removeCards(String hand, String dupeChars) {
         int numHas = 0;

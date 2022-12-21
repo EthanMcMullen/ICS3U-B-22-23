@@ -38,6 +38,7 @@ public class GoFish {
         cpuHand2 = checkHand(cpuHand2);
         cpuHand3 = checkHand(cpuHand3);
 
+        System.out.println("\n\n\nAll hands X means Faced Down \n_______________________________________________________________\n");
         printAllCards(playerHand, cpuHand1, cpuHand2, cpuHand3);
 
         // For player turn 
@@ -306,3 +307,4 @@ public class GoFish {
             return DIAMONDS;
     }
 }
+

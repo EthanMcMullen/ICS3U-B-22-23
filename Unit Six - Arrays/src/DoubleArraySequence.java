@@ -116,11 +116,7 @@ public class DoubleArraySequence implements Cloneable {
     public void addAfter(double d) {
         
         if(manyItems + 1 > data.length) {
-            double[] temp = new double[data.length*2];
-            for (int i = 0; i < manyItems; i++) {
-               temp[i] = data[i];
-            }
-            data = temp;
+            ensureCapacity(data.length*2);
         }
         if (isCurrent()) {
             for (int i = manyItems; i > currentIndex; i--) {
@@ -166,11 +162,7 @@ public class DoubleArraySequence implements Cloneable {
      **/
     public void addBefore(double d) {
         if(manyItems + 1 > data.length) {
-            double[] temp = new double[data.length*2];
-            for (int i = 0; i < manyItems; i++) {
-               temp[i] = data[i];
-            }
-            data = temp;
+            ensureCapacity(data.length*2);
         }
         if (!isCurrent()) {
             currentIndex = 0;
